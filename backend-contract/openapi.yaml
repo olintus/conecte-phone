@@ -1,0 +1,96 @@
+openapi: 3.1.0
+info:
+  title: Conecte Phone Provisioning API
+  version: 1.0.0
+servers:
+  - url: https://api.conecte.example.com
+paths:
+  /v1/mobile/sessions:
+    post:
+      summary: Autentica o cliente e provisiona a conta SIP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [document, password, installationId]
+              properties:
+                document: { type: string }
+                password: { type: string, format: password }
+                installationId: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Sessão provisionada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+  /v1/mobile/devices:
+    put:
+      summary: Registra/atualiza o token de push desta instalação
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [installationId, extension, platform, pushToken, pushType]
+              properties:
+                installationId: { type: string, format: uuid }
+                extension: { type: string }
+                platform: { type: string, enum: [ios, android] }
+                pushToken: { type: string }
+                pushType: { type: string, enum: [apns_voip, fcm] }
+      responses:
+        '204': { description: Registrado }
+    delete:
+      summary: Revoga o dispositivo no logout
+      security: [{ bearerAuth: [] }]
+      responses:
+        '204': { description: Revogado }
+  /v1/calls/{callId}:
+    get:
+      summary: Valida e obtém o estado atual de uma chamada recebida
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Chamada válida
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [callId, state]
+                properties:
+                  callId: { type: string, format: uuid }
+                  state: { type: string, enum: [ringing, answered_elsewhere, cancelled, ended] }
+                  sipTarget: { type: string }
+        '404': { description: Chamada inexistente ou expirada }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Session:
+      type: object
+      required: [accessToken, account]
+      properties:
+        accessToken: { type: string }
+        account:
+          type: object
+          required: [id, extension, domain, username, password, transport]
+          properties:
+            id: { type: string }
+            extension: { type: string }
+            domain: { type: string }
+            username: { type: string }
+            password: { type: string, format: password }
+            transport: { type: string, enum: [tls, tcp, udp] }
+            outboundProxy: { type: string }

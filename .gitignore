@@ -1,0 +1,37 @@
+# Android
+android/.gradle/
+android/local.properties
+android/**/build/
+android/**/build*/
+*.apk
+*.aab
+
+# Pacotes de distribuição (publique-os como GitHub Releases, não no histórico Git)
+artifacts/*.zip
+artifacts/*.tar.gz
+
+# iOS / Xcode
+ios/.build/
+ios/DerivedData/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+*.xcuserstate
+
+# Secrets
+**/google-services.json
+**/GoogleService-Info.plist
+*-firebase-adminsdk-*.json
+service-account*.json
+*.p12
+*.mobileprovision
+.env*
+!.env.example
+__pycache__/
+*.pyc
+gateway/.test-deps/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

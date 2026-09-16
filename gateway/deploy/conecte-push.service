@@ -1,0 +1,26 @@
+[Unit]
+Description=Conecte Phone AMI/FCM Gateway
+After=network-online.target asterisk.service
+Wants=network-online.target
+Requires=asterisk.service
+
+[Service]
+Type=simple
+User=conecte-push
+Group=conecte-push
+EnvironmentFile=/etc/conecte-push/gateway.env
+WorkingDirectory=/opt/conecte-push
+ExecStart=/opt/conecte-push/venv/bin/python /opt/conecte-push/conecte_push_gateway.py
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/conecte-push
+CapabilityBoundingSet=
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target

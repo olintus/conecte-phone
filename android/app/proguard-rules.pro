@@ -1,0 +1,3 @@
+-keep class com.google.firebase.messaging.** { *; }
+-keep class org.linphone.** { *; }
+-dontwarn org.linphone.**

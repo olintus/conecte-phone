@@ -1,0 +1,12 @@
+[general]
+enabled = yes
+webenabled = no
+port = 5038
+bindaddr = 127.0.0.1
+
+[conecte-push]
+secret = SUBSTITUIR_POR_SEGREDO_ALEATORIO
+deny = 0.0.0.0/0.0.0.0
+permit = 127.0.0.1/255.255.255.255
+read = user,system
+write = system
